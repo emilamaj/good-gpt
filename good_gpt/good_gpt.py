@@ -4,18 +4,8 @@ import os
 import requests
 import json
 
-# Read OpenAI API key from file. First line of file should contain the raw API key.
-userAccessToken = ""
-try:
-    with open("./openai_api_key.env", "r") as f:
-        lines = f.readlines()
-        if lines:
-            userAccessToken = lines[0].strip()
-except FileNotFoundError:
-    pass
-
-
 def get_response(
+    user_access_token,
     message_thread,
     maxTokens=256,
     temperature=1.0,
@@ -48,7 +38,7 @@ def get_response(
         url,
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {userAccessToken}",
+            "Authorization": f"Bearer {user_access_token}",
         },
         data=json.dumps(
             {
@@ -65,7 +55,6 @@ def get_response(
 
     # Return the response
     return response.json()["choices"][0]["message"]["content"]
-
 
 def thread_add_message(message_content, thread=None):
     """
@@ -98,14 +87,25 @@ def main():
     """
     Main function to run the shell command assistant.
     """
+    # Read OpenAI API key from file. First line of file should contain the raw API key.
+    user_access_token = ""
+    try:
+        with open("./openai_api_key.env", "r") as f:
+            lines = f.readlines()
+            if lines:
+                user_access_token = lines[0].strip()
+    except FileNotFoundError:
+        print("OpenAI API key file not found.")
+
+
     # Check for the presence of the OpenAI API key
-    if userAccessToken == "":
+    if user_access_token == "":
         print("OpenAI API key not found. Please provide a working API key:")
-        userAccessToken = input().strip()
+        user_access_token = input().strip()
 
         # Save the API key to a file
         with open("./openai_api_key.env", "w") as f:
-            f.write(userAccessToken)
+            f.write(user_access_token)
 
     # Process the input command
     user_command = " ".join(sys.argv[1:])
@@ -118,15 +118,14 @@ def main():
     system_message += "# USER_SYSTEM_PLATFORM: " + sys.platform
     thread = thread_add_message(system_message)
     thread = thread_add_message(user_command, thread)
-    suggested_command = get_response(thread)
+    suggested_command = get_response(user_access_token, thread)
 
-    print(f"Suggested Command:\n{suggested_command}\n")
+    print(f"Suggested Command (system: {sys.platform}):\n{suggested_command}")
     print("Do you want to execute this command? [Y/n]")
 
     choice = input().lower()
     if choice in ['y', 'yes', 'ok', 'good', '']:
         # Execute the command for Unix-like systems
-        print(f"Executing on platform: {sys.platform}")
         if sys.platform in ["linux", "darwin"]:
             os.system(f"{suggested_command}")
         # For Windows, you might need to adjust commands or use a translation layer
