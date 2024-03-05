@@ -4,8 +4,14 @@ import requests
 import json
 
 # Read OpenAI API key from file. First line of file should contain the raw API key.
-with open("./openai_api_key.env", "r") as f:
-    userAccessToken = f.readlines()[0].strip()
+userAccessToken = ""
+try:
+    with open("./openai_api_key.env", "r") as f:
+        lines = f.readlines()
+        if lines:
+            userAccessToken = lines[0].strip()
+except FileNotFoundError:
+    pass
 
 
 def get_response(
@@ -91,6 +97,15 @@ def main():
     """
     Main function to run the shell command assistant.
     """
+    # Check for the presence of the OpenAI API key
+    if userAccessToken == "":
+        print("OpenAI API key not found. Please provide a working API key:")
+        userAccessToken = input().strip()
+
+        # Save the API key to a file
+        with open("./openai_api_key.env", "w") as f:
+            f.write(userAccessToken)
+
     # Process the input command
     user_command = " ".join(sys.argv[1:])
     if user_command == "":
