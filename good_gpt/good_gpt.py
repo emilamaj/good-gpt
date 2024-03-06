@@ -3,6 +3,7 @@ import sys
 import os
 import requests
 import json
+import pathlib
 
 def get_response(
     user_access_token,
@@ -88,9 +89,11 @@ def main():
     Main function to run the shell command assistant.
     """
     # Read OpenAI API key from file. First line of file should contain the raw API key.
+    package_directory = pathlib.Path(__file__).parent.absolute()
+    env_path = package_directory / "openai_api_key.env"
     user_access_token = ""
     try:
-        with open("./openai_api_key.env", "r") as f:
+        with env_path.open("r") as f:
             lines = f.readlines()
             if lines:
                 user_access_token = lines[0].strip()
@@ -102,10 +105,10 @@ def main():
     if user_access_token == "":
         print("OpenAI API key not found. Please provide a working API key:")
         user_access_token = input().strip()
-
-        # Save the API key to a file
-        with open("./openai_api_key.env", "w") as f:
-            f.write(user_access_token)
+            # Save the API key to a file
+            with env_path.open("w") as f:
+                f.write(user_access_token)
+                print(f"OpenAI API key saved to {env_path}")
 
     # Process the input command
     user_command = " ".join(sys.argv[1:])
