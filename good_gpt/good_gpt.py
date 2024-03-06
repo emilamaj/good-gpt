@@ -55,7 +55,12 @@ def get_response(
     )
 
     # Return the response
-    return response.json()["choices"][0]["message"]["content"]
+    try:
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"Error: {e}: {repr(e)}")
+        print(f"Response: {response.text}")
+        return "An error occurred while processing the request."
 
 def thread_add_message(message_content, thread=None):
     """
@@ -98,13 +103,25 @@ def main():
             if lines:
                 user_access_token = lines[0].strip()
     except FileNotFoundError:
-        print("OpenAI API key file not found.")
-
+        print(f"Good-gpt: OpenAI API key file not found at {env_path}")
 
     # Check for the presence of the OpenAI API key
     if user_access_token == "":
         print("OpenAI API key not found. Please provide a working API key:")
         user_access_token = input().strip()
+        system_message = "You respond with pong"
+        thread = thread_add_message(system_message)
+        thread = thread_add_message("ping", thread)
+        try:
+            response = get_response(user_access_token, thread)
+            assert "pong" in response
+        except Exception as e:
+            print(f"Error: {e}: {repr(e)}")
+            print("Cannot verify the OpenAI API key.")
+            return
+        else:
+            print("OpenAI API key is valid.")
+            
             # Save the API key to a file
             with env_path.open("w") as f:
                 f.write(user_access_token)
