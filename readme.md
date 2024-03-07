@@ -23,7 +23,7 @@ For that, find the location of the `post_install.py` script using the following 
 ```bash
 pip show good-gpt
 ```
-and then navigate to the folder pointed by the `Location` field, and then navigate to the `good_gpt` folder.
+and then navigate to the folder pointed by the `Location` field, and then navigate to the `good_gpt` folder, where you will find the `post_install.py` script.
 
 Then run the script using the following command:
 ```bash
@@ -33,7 +33,35 @@ or if you have multiple python installations:
 ```bash
 python3 post_install.py
 ```
+With the directory added to your PATH, you now simply need to restart your terminal to use the `gg` command. You can also run the following command to refresh the PATH environment variable, depending on your terminal:
+```bash
+source ~/.bashrc
+```
+or
+```bash
+source ~/.zshrc
+```
+Windows does not require a refresh, but you may need to close and reopen the terminal.
 
 ## Usage
 On the first run, you will be asked to provide your OpenAI API key. You can get the API key by signing up at [openai.com](https://beta.openai.com/signup/)
+
 Simply paste the API key when prompted and press enter. The API key will be stored in openai_api_key.env in the same folder as the gg command.
+
+Here is an example on Windows 10:
+```bash
+C:\Users\user> gg current external ip address, only ipv4
+Do you want to execute this suggested command for win32? [y/n]
+--> curl ifconfig.me/ip -4
+<Enter>
+72.88.25.127
+```
+
+Here is an example on Ubuntu 20.04:
+```bash
+user@ubuntu:~$ gg current external ip address, only ipv4
+Do you want to execute this suggested command for linux? [y/n]
+--> dig +short myip.opendns.com @resolver1.opendns.com -4
+yes
+72.88.25.127
+```
