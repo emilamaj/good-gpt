@@ -44,7 +44,7 @@ source ~/.zshrc
 Windows does not require a refresh, but you may need to close and reopen the terminal.
 
 ## Usage
-On the first run, you will be asked to provide your OpenAI API key. You can get the API key by signing up at [openai.com](https://beta.openai.com/signup/)
+On the first run, you will be asked to provide your OpenAI API key. You can get the API key by signing up at [openai.com](https://beta.openai.com/signup/) and generating an API key at [openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
 
 Simply paste the API key when prompted and press enter. The API key will be stored in openai_api_key.env in the same folder as the gg command.
 
