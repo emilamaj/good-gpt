@@ -140,10 +140,14 @@ def main():
     thread = thread_add_message(user_command, thread)
     suggested_command = get_response(user_access_token, thread)
 
-    print(f"Suggested Command (system: {sys.platform}):\n{suggested_command}")
-    print("Do you want to execute this command? [Y/n]")
+    print(f"Do you want to execute this suggested command for {sys.platform}? [y/n]")
+    print(f"--> {suggested_command}")
 
-    choice = input().lower()
+    try:
+        choice = input().lower()
+    except (EOFError, KeyboardInterrupt):
+        choice = "n"
+
     if choice in ['y', 'yes', 'ok', 'good', '']:
         # Execute the command for Unix-like systems
         if sys.platform in ["linux", "darwin"]:
@@ -154,7 +158,7 @@ def main():
         else:
             print("Unsupported OS.")
     else:
-        print("Command not executed.")
+        print(" Command not executed.")
 
 if __name__ == "__main__":
     main()
