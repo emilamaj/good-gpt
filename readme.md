@@ -1,5 +1,16 @@
 # gg good-gpt
-Bake AI into your command-line terminal: describe a command like `Delete all video files in current folder` and the assistant will run `del *.mp4 *.mov *.avi *.mkv`
+AI Baked into your command-line terminal: describe what you want to do and the assistant will execute the corresponding command for you.
+```bash
+user@ubuntu:~$ gg list current processes by RAM usage
+Do you want to execute this suggested command for linux? [y/n]
+--> ps aux --sort=-rss
+<Enter>
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+user0     2942  1.0  0.2  38204 21308 tty3     S    11:57   0:00 /usr/bin/python3 /home/user0/.local/bin/gg list current processes by RAM usage
+root      2831  0.0  0.0  19884  5396 pts/2    S    11:13   0:00 ssh RemoteHost
+root      2728 49.3  0.0  19888  5088 ?        R    09:20  78:02 ssh RemoteHost
+...
+```
 
 ## Installation
 This tool is built using python. It has been tested on python 3.10 on both windows and linux.
@@ -14,7 +25,9 @@ or if you have multiple python installations:
 pip3 install good-gpt
 ```
 
-This will install the package, but you may not yet have the `gg` command available in your terminal. For that, you need to add the installation location to your PATH environment variable.
+This will install the package, but you may not yet have the `gg` command available in your terminal at this point.
+
+For that, you need to add the installation location to your PATH environment variable.
 The installation location by default is `%APPDATA%\Python\Python3XX\Scripts\Lib\site-packages\good_gpt` on Windows and `$HOME/.local/lib/python3.XX/site-packages/good_gpt/` on linux.
 
 If PATH is not correctly set, you need to run the `post_install.py` script to add the installation location to your PATH.
