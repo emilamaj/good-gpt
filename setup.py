@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='good-gpt',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
@@ -42,3 +42,12 @@ setup(
         'Operating System :: POSIX :: Linux',
     ],
 )
+
+# In order to update the package on PyPI, you can run the following command:
+# > rm -rf dist build good_gpt.egg-info (on Windows: rmdir /s /q dist build good_gpt.egg-info)
+# > python setup.py sdist bdist_wheel
+# > twine upload dist/*
+# This will build the package and upload it to PyPI.
+# To install the package from PyPI, you can run:
+# > pip install good-gpt
+# This will install the package and add the gg command to your PATH.

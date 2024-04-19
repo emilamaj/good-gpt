@@ -4,6 +4,7 @@ import os
 import requests
 import json
 import pathlib
+import re
 
 def get_response(
     user_access_token,
@@ -89,6 +90,21 @@ def thread_add_message(message_content, thread=None):
             raise ValueError("Invalid role in message thread")
     return thread
 
+def filter_output(output_str):
+    """
+    Filters the output string. For example, code is often enclosed in triple quotes:
+    ```programming_language
+    some command to execute
+    ```
+    """
+    # Regex to grab the command from the code block
+    # Make sure to discard the language part of the code block
+    output_str = output_str.strip()
+    if "```" in output_str:
+        output_str = re.sub(r"```.*\n", "", output_str)
+        output_str = output_str.replace("```", "")
+    return output_str
+
 def main():
     """
     Main function to run the shell command assistant.
@@ -139,6 +155,9 @@ def main():
     thread = thread_add_message(system_message)
     thread = thread_add_message(user_command, thread)
     suggested_command = get_response(user_access_token, thread)
+
+    # Filter the output
+    suggested_command = filter_output(suggested_command)
 
     print(f"Do you want to execute this suggested command for {sys.platform}? [y/n]")
     print(f"--> {suggested_command}")
